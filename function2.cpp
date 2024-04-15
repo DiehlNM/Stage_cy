@@ -588,30 +588,6 @@ double mu_max (double T, int meth, int Dim){
     mu_maxi = max(val_m_eup-val_m_edown)/2;
     mx = real(si_p);
     my = imag(si_p);
-    vector<double> moment(Dim,Dim) ; 
-    mat moment_mag (Dim, Dim, arma::fill::zeros);
-    
-
-    for (int i=0; i<Dim; i++){
-
-        for( int j=0; j<Dim; j++){
-
-            moment_mag(i,j)=(val_m_eup(i*Dim+j)-val_m_edown(i*Dim+j));
-
-        }
-    }
-
-    std::vector<std::vector<double>> data(moment_mag.n_rows, std::vector<double>(moment_mag.n_cols));
-
-    for(size_t i = 0; i < moment_mag.n_rows; ++i) {
-        for(size_t j = 0; j < moment_mag.n_cols; ++j) {
-            data[i][j] = moment_mag(i, j);
-        }
-    }    
-
-    imshow(data);
-    colorbar();
-    show();
 
     cout << "\n \nFin d'itération \n\n\n" ;
     cout << "Energie de fermi " << energie_fermi << endl;
@@ -638,6 +614,8 @@ double mu_max (double T, int meth, int Dim){
 
 
     // Display of the magnetic configuration 
+
+    
 
 
 

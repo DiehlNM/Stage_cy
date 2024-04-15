@@ -1,6 +1,7 @@
 #include <iostream>
 #include <armadillo>
 #include "matplotlibcpp.h"
+#include "plot_magnetic.hpp"
 
 namespace plt = matplotlibcpp;
 using namespace std;

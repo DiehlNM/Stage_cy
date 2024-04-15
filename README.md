@@ -8,4 +8,9 @@ Par Christian D. NGOMA MANICKA
 
 g++ main.cpp -o main2 -std=c++11 -O2 -I ~/Documents/Stage_3/arma/armadillo-11.0.0/include -I/usr/include/python3.10 function2.cpp -DARMA_DONT_USE_WRAPPER -lopenblas -lpython3.10 -I /home/diehlm/.local/lib/python3.10/site-packages/numpy/core/include
 
+//Listing des fichiers 
+
+function.cpp contient le calcul pour le cas où les termes non-diagonaux du hamiltonien sont nuls 
+
+function2.cpp contient le calcul pour le cas où les termes non-diagonaux sont non nuls 
 
