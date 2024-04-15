@@ -590,6 +590,7 @@ double mu_max (double T, int meth, int Dim){
     mu_maxi = max(val_m_eup-val_m_edown)/2;
     mx = real(si_p);
     my = imag(si_p);
+    vec mz = (val_m_eup - val_m_edown)/2;
 
     cout << "\n \nFin d'itération \n\n\n" ;
     cout << "Energie de fermi " << energie_fermi << endl;
@@ -612,7 +613,8 @@ double mu_max (double T, int meth, int Dim){
     cout << " My " << my << endl; 
     cout << "Moment " << (val_m_eup - val_m_edown)/2 << endl;
 
-    plot_magnetic_moments(mx, my, Dim);
+    plot_magnetic_moments(mx, mz, Dim);
+    plot_magnetic_moments(my, mz, Dim);
 
 
 
