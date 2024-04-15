@@ -304,8 +304,8 @@ double mu_max (double T, int meth, int Dim){
 
 
     double criter_up=1.0 , criter_down=1.0, U=0.1, criter_m=1.0, criter_p=1.0;
-    double /*T=500,*/ kB=0.0000861328, eV= 1.9e-19;
-    double beta= 1/(kB*T);
+    double /*T=500,*/  eV= 1.9e-19;
+    double beta= 1/(T); // T here represent kbT
     //cout << "beta " << beta << endl;
     int iter=0;
     double mu;
@@ -591,6 +591,8 @@ double mu_max (double T, int meth, int Dim){
     mx = real(si_p);
     my = imag(si_p);
     vec mz = (val_m_eup - val_m_edown)/2;
+    vec occup = (val_m_eup + val_m_edown);
+
 
     cout << "\n \nFin d'itération \n\n\n" ;
     cout << "Energie de fermi " << energie_fermi << endl;
@@ -612,14 +614,12 @@ double mu_max (double T, int meth, int Dim){
     cout << " Mx " << mx << endl;
     cout << " My " << my << endl; 
     cout << "Moment " << (val_m_eup - val_m_edown)/2 << endl;
+    cout << "Occupation moyenne par site " << occup << endl;
+
+ // Display of the magnetic configuration 
 
     plot_magnetic_moments(mx, mz, Dim);
     plot_magnetic_moments(my, mz, Dim);
-
-
-
-
-    // Display of the magnetic configuration 
 
     
 

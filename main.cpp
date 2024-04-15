@@ -41,7 +41,7 @@ int main(){
         //x.at(i)=i;
         //cout << x[i] << "\t";
         
-        double a =mu_max(100, meth, 4);
+        double a =mu_max(0.000001, meth, 4);
         //cout << y[i] << endl;
         //flux << i << "\t" << y[i] << endl;
 
