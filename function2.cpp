@@ -6,12 +6,14 @@
 #include <ctime>
 #include <cmath>
 #include "function2.hpp"
-#include "matplotlibcpp.h"
+//#include "matplotlibcpp.h"
+#include "plot_magnetic.hpp"
+
 
 
 using namespace std;
 using namespace arma;
-using namespace matplotlibcpp;
+//using namespace matplotlibcpp;
 
 bool est_p_voisin (int i, int j, int Dim, const dmat &Position){
 
@@ -609,6 +611,8 @@ double mu_max (double T, int meth, int Dim){
     cout << " Mx " << mx << endl;
     cout << " My " << my << endl; 
     cout << "Moment " << (val_m_eup - val_m_edown)/2 << endl;
+
+    plot_magnetic_moments(mx, my, Dim);
 
 
 

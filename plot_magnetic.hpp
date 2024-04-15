@@ -1,8 +1,9 @@
+#pragma once 
 #include <iostream>
 #include <armadillo>
-#include "matplotlibcpp.h"
+//#include "matplotlibcpp.h"
 
-namespace plt = matplotlibcpp;
+//using namespace matplotlibcpp;
 using namespace std;
 using namespace arma;
 

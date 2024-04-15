@@ -3,7 +3,7 @@
 #include "matplotlibcpp.h"
 #include "plot_magnetic.hpp"
 
-namespace plt = matplotlibcpp;
+using namespace matplotlibcpp;
 using namespace std;
 using namespace arma;
 
@@ -20,10 +20,10 @@ void plot_magnetic_moments(const vec& mx, const vec& my, int Dim) {
     }
 
     // Set up plot limits and labels
-    plt::quiver(x, y, u, v);
-    plt::xlim(-1, Dim);
-    plt::ylim(-1, Dim);
-    plt::title("Magnetic Moment Directions");
-    plt::show();
+    quiver(x, y, u, v);
+    xlim(-1, Dim);
+    ylim(-1, Dim);
+    title("Magnetic Moment Directions");
+    show();
     
 }
