@@ -7,4 +7,4 @@
 using namespace std;
 using namespace arma;
 
-void plot_magnetic_moments(const vec& mx, const vec& my, int Dim);
+void plot_magnetic_moments(const vec& mx, const vec& my, const vec& mz, int Dim);
