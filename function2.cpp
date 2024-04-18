@@ -618,7 +618,7 @@ double mu_max (double T, int meth, int Dim){
 
  // Display of the magnetic configuration 
 
-    plot_magnetic_moments(mz, my, mx, Dim);
+    plot_magnetic_moments(mx, my, mz, Dim);
  
 
     //cout << "Moment " << val_m_eup - val_m_edown << endl;
