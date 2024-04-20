@@ -42,7 +42,7 @@ int main(){
         //x.at(i)=i;
         //cout << x[i] << "\t";
         
-        double a =mu_max(1, meth, 4);
+        double a =mu_max(0.000001, meth, 4);
 
         int result = system("/bin/python3 /media/diehlm/Data/Linux/Stage_CY/plot_moment.py");
         if (result != 0) {

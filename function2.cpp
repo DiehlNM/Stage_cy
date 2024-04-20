@@ -304,9 +304,10 @@ double mu_max (double T, int meth, int Dim){
     // Calcul auto cohérent des Ni
 
 
-    double criter_up=1.0 , criter_down=1.0, U=0.1, criter_m=1.0, criter_p=1.0;
+    double criter_up=1.0 , criter_down=1.0, criter_m=1.0, criter_p=1.0;
     double /*T=500,*/  eV= 1.9e-19;
     double beta= 1/(T); // T here represent kbT
+    double U=3*t;
     //cout << "beta " << beta << endl;
     int iter=0;
     double mu;
@@ -326,9 +327,13 @@ double mu_max (double T, int meth, int Dim){
     //double nb_elec; // Nombre d'electron 
     //double w_up, w_down; //Variable pour les fonctions de répartition 
     //double fermi_dirac;
+    cout << " vue " << endl;
+
+    std::ofstream file("criteria_data.csv");
+    file << "Iteration,Criter_Down,Criter_Up,Criter_M,Criter_P\n";
 
 
-    while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) && (criter_m>0.00001) && (criter_p > 0.00001) ){
+    while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) &&  (criter_m > 0.00001) && (criter_p > 0.00001) ){
 
         double potentiel_chimique=0;// Potentiel chimique 
         double step=0;
@@ -338,9 +343,9 @@ double mu_max (double T, int meth, int Dim){
 
         iter +=1;
 
-        //if (iter==5000){
-            //break;
-        //}
+        if (iter==5000){
+            break;
+        }
 
         energie_totale = 0;
 
@@ -583,9 +588,13 @@ double mu_max (double T, int meth, int Dim){
         //cout << "Ni = " << val_m_eup + val_m_edown << "\t";
 
 
-        
+        file << iter << "," << criter_down << "," << criter_up << "," << criter_m << "," << criter_p << "\n";
+
 
     }
+
+    file.close();
+
     
     double mu_maxi;
     mu_maxi = max(val_m_eup-val_m_edown)/2;
@@ -602,12 +611,14 @@ double mu_max (double T, int meth, int Dim){
     cout << "Energie totale " << energie_totale << endl;
     cout << "Valeur du gap " << gap << endl;
     cout << "Nombre ITERATION " << iter << endl;
+    cout << "Temperature\t" << T << endl;
+    cout << "Valeur de U " << U << endl;
     cout << "Criter up " << criter_up << endl;
     cout << "Criter down " << criter_down << endl;
     cout << "Criter m " << criter_m << endl;
     cout << "Criter p " << criter_p << endl; 
     cout << "energie totale " << energie_totale << endl;
-    cout << "Temperature\t" << T << endl;
+
     //cout << " Si m\t" << si_m;
     //cout << "Si p\t" << si_p;
     //cout << " Ni up " << val_m_eup << endl;
