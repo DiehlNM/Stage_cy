@@ -8,6 +8,7 @@
 #include "function2.hpp"
 //#include "matplotlibcpp.h"
 #include "plot_magnetic.hpp"
+#include "save_data.hpp"
 
 
 
@@ -327,7 +328,7 @@ double mu_max (double T, int meth, int Dim){
     //double fermi_dirac;
 
 
-    while ( (criter_down > 0.00001) && (criter_up > 0.00001) /*&& (criter_m>0.00001) && (criter_p > 0.00001)*/ ){
+    while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) && (criter_m>0.00001) && (criter_p > 0.00001) ){
 
         double potentiel_chimique=0;// Potentiel chimique 
         double step=0;
@@ -337,9 +338,9 @@ double mu_max (double T, int meth, int Dim){
 
         iter +=1;
 
-        if (iter==1000){
-            break;
-        }
+        //if (iter==5000){
+            //break;
+        //}
 
         energie_totale = 0;
 
@@ -508,7 +509,7 @@ double mu_max (double T, int meth, int Dim){
 
                 nval_moyen_eu(i) += (real(conj(vec_prop_tot(i,j))*vec_prop_tot(i,j))*fermi_dirac);
         //cout << "test32 " << endl;
-                //nsi_p(i) += (conj(vec_prop_tot(j,i))*vec_prop_tot(j,i+Nb_at))*fermi_dirac;
+                nsi_p(i) += (conj(vec_prop_tot(j,i))*vec_prop_tot(j,i+Nb_at))*fermi_dirac;
 
 
                 if(i==0) {
@@ -534,7 +535,7 @@ double mu_max (double T, int meth, int Dim){
                 }*/
                 //cout << "test4 " << endl;
 
-                //nsi_m(i) += (conj(vec_prop_tot(j,i+Nb_at))*vec_prop_tot(j,i))*fermi_dirac;
+                nsi_m(i) += (conj(vec_prop_tot(j,i+Nb_at))*vec_prop_tot(j,i))*fermi_dirac;
 
                 //cout << "test5 " << endl;
 
@@ -592,6 +593,8 @@ double mu_max (double T, int meth, int Dim){
     my = imag(si_p);
     vec mz = (val_m_eup - val_m_edown)/2;
     vec occup = (val_m_eup + val_m_edown);
+    //vec norme_moment = (mx *mx + my*my + mz*mz);
+
 
 
     cout << "\n \nFin d'itération \n\n\n" ;
@@ -613,12 +616,14 @@ double mu_max (double T, int meth, int Dim){
     //cout << " si_m " << si_m << endl;
     cout << " Mx " << mx << endl;
     cout << " My " << my << endl; 
-    cout << "Moment " << (val_m_eup - val_m_edown)/2 << endl;
+    cout << " Mz " << (val_m_eup - val_m_edown)/2 << endl;
     cout << "Occupation moyenne par site " << occup << endl;
+    //cout << "Norme moment " << norme_moment << endl;
 
  // Display of the magnetic configuration 
-
+    save_magnetic_data(mx, my, mz, "magnetic_data.csv");
     plot_magnetic_moments(mx, my, mz, Dim);
+
  
 
     //cout << "Moment " << val_m_eup - val_m_edown << endl;

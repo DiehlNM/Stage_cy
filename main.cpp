@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 //#define ARMA_DONT_USE_WRAPPER
 //#include "matplotlibcpp.h"
 #include <armadillo>
@@ -41,7 +42,15 @@ int main(){
         //x.at(i)=i;
         //cout << x[i] << "\t";
         
-        double a =mu_max(0.000001, meth, 4);
+        double a =mu_max(1, meth, 4);
+
+        int result = system("/bin/python3 /media/diehlm/Data/Linux/Stage_CY/plot_moment.py");
+        if (result != 0) {
+            std::cerr << "Erreur lors de l'exécution du script Python." << std::endl;
+            return 1; // Retourne une erreur
+        }
+
+    std::cout << "Le script Python a été exécuté avec succès." << std::endl;
         //cout << y[i] << endl;
         //flux << i << "\t" << y[i] << endl;
 
