@@ -1,6 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 
 def plot_magnetic_moments_3d(filename, dim):
     # Chargement des données
@@ -11,40 +11,65 @@ def plot_magnetic_moments_3d(filename, dim):
     my = data['my'].values
     mz = data['mz'].values
 
-    # Préparation des données pour le tracé 3D
+    # Préparer les données pour le tracé
     x, y, z, u, v, w = [], [], [], [], [], []
+    intensities = np.zeros((dim, dim))
     for i in range(dim):
         for j in range(dim):
-            # Coordonnées de base pour chaque vecteur
             x.append(i)
             y.append(j)
             z.append(0)  # Utilisation d'un plan z=0 pour simplifier la visualisation
             idx = i * dim + j
-            # Composantes des vecteurs
             u.append(mx[idx])
             v.append(my[idx])
             w.append(mz[idx])
+            intensities[i, j] = np.sqrt(mx[idx]**2 + my[idx]**2 + mz[idx]**2)  # Calcul de l'intensité
 
-    # Création de la figure 3D
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    # Création des subplots
+    fig, axs = plt.subplots(3, 2, figsize=(12, 18))
 
-    # Tracé des vecteurs
-    ax.quiver(x, y, z, u, v, w, length=0.1, normalize=True)  # Ajustez 'length' selon le besoin
+    # Plan XY - Vecteurs
+    axs[0, 0].quiver(x, y, u, v)
+    axs[0, 0].set_xlim([0, dim-1])
+    axs[0, 0].set_ylim([0, dim-1])
+    axs[0, 0].set_title("Magnetic Moments in XY Plane (Vectors)")
 
-    # Configuration des limites et étiquettes des axes
-    ax.set_xlim([0, dim-1])
-    ax.set_ylim([0, dim-1])
-    ax.set_zlim([-1, 1])  # Ajustez selon la distribution des valeurs de mz
+    # Plan XY - Intensité
+    c1 = axs[0, 1].pcolormesh(np.arange(dim), np.arange(dim), intensities, shading='auto', cmap='viridis')
+    axs[0, 1].set_xlim([0, dim-1])
+    axs[0, 1].set_ylim([0, dim-1])
+    axs[0, 1].set_title("Magnetic Moments in XY Plane (Intensity)")
+    fig.colorbar(c1, ax=axs[0, 1], label='Intensity')
 
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Z')
+    # Plan YZ - Vecteurs
+    axs[1, 0].quiver(x, y, v, w)
+    axs[1, 0].set_xlim([0, dim-1])
+    axs[1, 0].set_ylim([0, dim-1]) # Ajustez selon la distribution des valeurs de mz
+    axs[1, 0].set_title("Magnetic Moments in YZ Plane (Vectors)")
 
+    # Plan YZ - Intensité
+    c2 = axs[1, 1].pcolormesh(np.arange(dim), np.arange(dim), intensities, shading='auto', cmap='viridis')
+    axs[1, 1].set_xlim([0, dim-1])
+    axs[1, 1].set_ylim([0, dim-1])
+    axs[1, 1].set_title("Magnetic Moments in YZ Plane (Intensity)")
+    fig.colorbar(c2, ax=axs[1, 1], label='Intensity')
 
-    ax.set_title("3D Magnetic Moments Visualization")
+    # Plan XZ - Vecteurs
+    axs[2, 0].quiver(x, y, u, w)
+    axs[2, 0].set_xlim([0, dim-1])
+    axs[2, 0].set_ylim([0, dim-1])  # Ajustez selon la distribution des valeurs de mz
+    axs[2, 0].set_title("Magnetic Moments in XZ Plane (Vectors)")
 
+    # Plan XZ - Intensité
+    c3 = axs[2, 1].pcolormesh(np.arange(dim), np.arange(dim), intensities, shading='auto', cmap='viridis')
+    axs[2, 1].set_xlim([0, dim-1])
+    axs[2, 1].set_ylim([0, dim-1])
+    axs[2, 1].set_title("Magnetic Moments in XZ Plane (Intensity)")
+    fig.colorbar(c3, ax=axs[2, 1], label='Intensity')
+
+    # Affichage des plots
+    plt.tight_layout()
     plt.show()
 
 # Appel de la fonction avec le chemin vers le fichier CSV et la dimension de la grille
-plot_magnetic_moments_3d('magnetic_data.csv', 4)  # Assurez-vous que Dim correspond à la dimension de votre grille
+plot_magnetic_moments_3d('magnetic_data.csv', 15)  # Assurez-vous que dim correspond à la dimension de votre grille

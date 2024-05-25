@@ -3,6 +3,8 @@
 #include <armadillo>
 //#include <lapack.h>
 #include <random>
+#include <chrono>
+#include <thread>
 #include <ctime>
 #include <cmath>
 #include "function2.hpp"
@@ -14,6 +16,7 @@
 
 using namespace std;
 using namespace arma;
+using namespace std::chrono;
 //using namespace matplotlibcpp;
 
 bool est_p_voisin (int i, int j, int Dim, const dmat &Position){
@@ -39,7 +42,7 @@ bool est_p_voisin (int i, int j, int Dim, const dmat &Position){
 }
 
 
-double potentiel_chimique_dichotomie (vec valp, int Nb_val, double beta){
+double potentiel_chimique_dichotomie (vec valp, double Nb_val, double beta){
 
     double mu_1, mu_2, mu_val;
     int const N= valp.size();
@@ -89,14 +92,14 @@ double potentiel_chimique_dichotomie (vec valp, int Nb_val, double beta){
     //cout << " Nbval " << Nb_val << " Ne1 " << Ne_1 << " Ne2 " << Ne_2 << " Iter " << ater << endl;
     //cout << " mu1 " << mu_1 << " mu2 " << mu_2 << endl;
 
-    cout << "\n ATER " << ater << "\n";
+    //cout << "\n ATER " << ater << "\n";
 
     return mu_val;
 
 
 }
 
-double potentiel_chimique_meth (vec valp, int Nb_val, double beta){
+double potentiel_chimique_meth (vec valp, double Nb_val, double beta){
 
 
     double potentiel_chimique = valp(0);
@@ -123,11 +126,12 @@ double potentiel_chimique_meth (vec valp, int Nb_val, double beta){
 
 }
 
-double mu_max (double T, int meth, int Dim){
+double mu_max (double T, int meth, int Dim, double density){
 
-    std::cout << "Implémentation des variables " << std::endl ;
+
 
     // Implémentation des variables  
+    std::cout << "Implémentation des variables " << std::endl ;
 
     //int Dim=4;           // Dimension du réseau 
     int Nb_at = Dim*Dim;    // Nombre d'atomes = Dim*Dim
@@ -251,7 +255,7 @@ double mu_max (double T, int meth, int Dim){
     std::uniform_real_distribution<double> distr(0,0.5);
     
 
-    for( int i; i<Nb_at; i++){
+    for( int i=0; i<Nb_at; i++){
 
         valeurs = distr(re);
 
@@ -310,7 +314,7 @@ double mu_max (double T, int meth, int Dim){
     double U=3*t;
     //cout << "beta " << beta << endl;
     int iter=0;
-    double mu;
+    double mu, density_total;
 
     double energie_totale, energie_fermi, gap;
     mat Val_m_edown, Val_m_eup;
@@ -332,8 +336,11 @@ double mu_max (double T, int meth, int Dim){
     std::ofstream file("criteria_data.csv");
     file << "Iteration,Criter_Down,Criter_Up,Criter_M,Criter_P\n";
 
+    auto start = high_resolution_clock::now();
+    auto last_time = start;
 
-    while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) &&  (criter_m > 0.00001) && (criter_p > 0.00001) ){
+
+    while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) &&  (criter_m > 0.000001) && (criter_p > 0.000001) ){
 
         double potentiel_chimique=0;// Potentiel chimique 
         double step=0;
@@ -342,6 +349,8 @@ double mu_max (double T, int meth, int Dim){
         double fermi_dirac=0;
 
         iter +=1;
+
+        //cout << iter << endl;
 
         if (iter==5000){
             break;
@@ -437,6 +446,8 @@ double mu_max (double T, int meth, int Dim){
         //cout << "Val prop triées " << val_prop << endl;
 
         eig_gen (val_prop_tot, vec_prop_tot, H_total);
+        cx_vec eig_vec_col_i , eig_vec_col_i_plus_N;
+
         vec val_prop_tot_real = sort(real(val_prop_tot));
         
         //cout << "test1 " << endl;
@@ -479,11 +490,11 @@ double mu_max (double T, int meth, int Dim){
 
         if (meth == 1){
 
-            potentiel_chimique = potentiel_chimique_meth(val_prop_tot_real,Nb_at, beta);
+            potentiel_chimique = potentiel_chimique_meth(val_prop_tot_real,Nb_at*density, beta);
 
         } else if (meth == 2){
 
-            potentiel_chimique = potentiel_chimique_dichotomie (val_prop_tot_real, Nb_at, beta);
+            potentiel_chimique = potentiel_chimique_dichotomie (val_prop_tot_real, Nb_at*density, beta);
 
         }
         //potentiel_chimique +=- step/2; // ?????????? just -=
@@ -507,21 +518,29 @@ double mu_max (double T, int meth, int Dim){
                 //cout << "test3 " << endl;
                 //cout << "i " << i << " j " << j << endl;
 
+                eig_vec_col_i = vec_prop_tot.col(i);
+                eig_vec_col_i_plus_N = vec_prop_tot.col(i+Nb_at);
+
                 w_up = exp(beta*(real(val_prop_tot(j))-potentiel_chimique));
 
                 fermi_dirac = 1/(1+w_up);
         //cout << "test31 " << i << " " << j << endl;
 
                 nval_moyen_eu(i) += (real(conj(vec_prop_tot(i,j))*vec_prop_tot(i,j))*fermi_dirac);
+                //nval_moyen_eu(i) = (real(dot(conj(eig_vec_col_i),eig_vec_col_i))*fermi_dirac);
+                //nval_moyen_eu(i) = real(dot(conj(vec_prop_tot.row(i)), vec_prop_tot.row(i)));
+                
         //cout << "test32 " << endl;
-                nsi_p(i) += (conj(vec_prop_tot(j,i))*vec_prop_tot(j,i+Nb_at))*fermi_dirac;
+                nsi_p(i) += (conj(vec_prop_tot(i,j))*vec_prop_tot(i+Nb_at,j))*fermi_dirac;
+                //nsi_p(i) = (dot(conj(eig_vec_col_i),eig_vec_col_i_plus_N))*fermi_dirac;
+                //nsi_p(i) = (dot(conj(vec_prop_tot.row(i)),vec_prop_tot.row(i+Nb_at)));
 
 
-                if(i==0) {
+                //if(i==0) {
 
-                    energie_totale += real(val_prop_tot(j))*fermi_dirac;
+                    //energie_totale += real(val_prop_tot(j))*fermi_dirac;
 
-                }
+                //}
 
 
 
@@ -532,6 +551,9 @@ double mu_max (double T, int meth, int Dim){
                 //cout << "Fermi2 " << i << " " << j << " " << fermi_dirac << endl;
 
                 nval_moyen_ed(i) += (real(conj(vec_prop_tot(i+Nb_at,j))*vec_prop_tot(i+Nb_at,j))*fermi_dirac);
+                //nval_moyen_ed(i) = (real(dot(conj(eig_vec_col_i_plus_N),eig_vec_col_i_plus_N))*fermi_dirac);
+                //nval_moyen_ed(i) = real(dot(conj(vec_prop_tot.row(i+Nb_at)), vec_prop_tot.row(i+Nb_at)));
+
                 
                 /*if(i==0) {
 
@@ -540,7 +562,9 @@ double mu_max (double T, int meth, int Dim){
                 }*/
                 //cout << "test4 " << endl;
 
-                nsi_m(i) += (conj(vec_prop_tot(j,i+Nb_at))*vec_prop_tot(j,i))*fermi_dirac;
+                nsi_m(i) += (conj(vec_prop_tot(i+Nb_at,j))*vec_prop_tot(i,j))*fermi_dirac;
+                //nsi_m(i) = (dot(conj(eig_vec_col_i_plus_N),eig_vec_col_i))*fermi_dirac;
+                //nsi_m(i) = (dot(conj(vec_prop_tot.row(i+Nb_at)),vec_prop_tot.row(i)));
 
                 //cout << "test5 " << endl;
 
@@ -555,11 +579,11 @@ double mu_max (double T, int meth, int Dim){
         //cout << " i " << i << " j " << j << endl;
 
         
-        for (int i=0; i<Nb_at; i++){
+        //for (int i=0; i<Nb_at; i++){
 
-            energie_totale += U*nval_moyen_eu(i)*nval_moyen_ed(i);
+            //energie_totale += U*nval_moyen_eu(i)*nval_moyen_ed(i);
         
-        }
+        //}
 
         //cout << " Ni up " << val_m_eup << endl;
         //cout << " Ni down " << val_m_edown << endl;
@@ -591,6 +615,17 @@ double mu_max (double T, int meth, int Dim){
         file << iter << "," << criter_down << "," << criter_up << "," << criter_m << "," << criter_p << "\n";
 
 
+        auto now = high_resolution_clock::now();
+        auto duration = duration_cast<seconds>(now - last_time);
+        if (duration.count() >= 1) {
+            auto elapsed = duration_cast<seconds>(now - start);
+            auto hour = duration_cast<hours>(elapsed).count();
+            auto minute = duration_cast<minutes>(elapsed).count() % 60;
+            auto second = elapsed.count() % 60;
+            cout << "\rElapsed time: " << hour << "h " << minute << "m " << second << "s" << flush;
+            last_time = now;
+        }
+
     }
 
     file.close();
@@ -602,21 +637,24 @@ double mu_max (double T, int meth, int Dim){
     my = imag(si_p);
     vec mz = (val_m_eup - val_m_edown)/2;
     vec occup = (val_m_eup + val_m_edown);
+
+    density_total = sum(occup)/Nb_at;
     //vec norme_moment = (mx *mx + my*my + mz*mz);
 
 
 
     cout << "\n \nFin d'itération \n\n\n" ;
-    cout << "Energie de fermi " << energie_fermi << endl;
-    cout << "Energie totale " << energie_totale << endl;
-    cout << "Valeur du gap " << gap << endl;
+    //cout << "Energie de fermi " << energie_fermi << endl;
+    //cout << "Energie totale " << energie_totale << endl;
+    //cout << "Valeur du gap " << gap << endl << endl << endl;
+    cout << "Taille du réseau " << Dim << "*" << Dim << endl;
     cout << "Nombre ITERATION " << iter << endl;
     cout << "Temperature\t" << T << endl;
-    cout << "Valeur de U " << U << endl;
+    cout << "Valeur de U " << U << "t" << endl;
     cout << "Criter up " << criter_up << endl;
     cout << "Criter down " << criter_down << endl;
     cout << "Criter m " << criter_m << endl;
-    cout << "Criter p " << criter_p << endl; 
+    cout << "Criter p " << criter_p << endl << endl;
     cout << "energie totale " << energie_totale << endl;
 
     //cout << " Si m\t" << si_m;
@@ -625,10 +663,12 @@ double mu_max (double T, int meth, int Dim){
     //cout << " Ni down " << val_m_edown << endl;
     //cout << " Ni " << val_m_edown + val_m_eup << endl;
     //cout << " si_m " << si_m << endl;
-    cout << " Mx " << mx << endl;
-    cout << " My " << my << endl; 
-    cout << " Mz " << (val_m_eup - val_m_edown)/2 << endl;
-    cout << "Occupation moyenne par site " << occup << endl;
+    //cout << " Mx " << mx << endl;
+    //cout << " My " << my << endl; 
+    //cout << " Mz " << (val_m_eup - val_m_edown)/2 << endl;
+    //cout << "Occupation moyenne par site " << occup << endl;
+    cout << "Mean density value " << density_total << endl;
+    cout << "Nombre d'électron total " << sum(occup) << endl;
     //cout << "Norme moment " << norme_moment << endl;
 
  // Display of the magnetic configuration 
