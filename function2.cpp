@@ -536,11 +536,11 @@ double mu_max (double T, int meth, int Dim, double density){
                 //nsi_p(i) = (dot(conj(vec_prop_tot.row(i)),vec_prop_tot.row(i+Nb_at)));
 
 
-                //if(i==0) {
+                if(i==0) {
 
-                    //energie_totale += real(val_prop_tot(j))*fermi_dirac;
+                    energie_totale += real(val_prop_tot(j))*fermi_dirac;
 
-                //}
+                }
 
 
 
@@ -632,6 +632,13 @@ double mu_max (double T, int meth, int Dim, double density){
 
     
     double mu_maxi;
+    energie_totale -= dot(val_m_eup,val_m_edown);
+    energie_totale += norm(si_p)*norm(si_p);
+    energie_totale += 0.25;
+    energie_totale *= U;
+
+    double energy_per_site = energie_totale / Nb_at;
+
     mu_maxi = max(val_m_eup-val_m_edown)/2;
     mx = real(si_p);
     my = imag(si_p);
@@ -656,6 +663,8 @@ double mu_max (double T, int meth, int Dim, double density){
     cout << "Criter m " << criter_m << endl;
     cout << "Criter p " << criter_p << endl << endl;
     cout << "energie totale " << energie_totale << endl;
+    cout << "energie par atome " << energy_per_site << endl;
+    
 
     //cout << " Si m\t" << si_m;
     //cout << "Si p\t" << si_p;
@@ -672,7 +681,7 @@ double mu_max (double T, int meth, int Dim, double density){
     //cout << "Norme moment " << norme_moment << endl;
 
  // Display of the magnetic configuration 
-    save_magnetic_data(mx, my, mz, "magnetic_data.csv");
+    save_magnetic_data(mx, my, mz, Dim, density_total);
     plot_magnetic_moments(mx, my, mz, Dim);
 
  

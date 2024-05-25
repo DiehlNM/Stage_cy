@@ -72,4 +72,4 @@ def plot_magnetic_moments_3d(filename, dim):
     plt.show()
 
 # Appel de la fonction avec le chemin vers le fichier CSV et la dimension de la grille
-plot_magnetic_moments_3d('magnetic_data.csv', 15)  # Assurez-vous que dim correspond à la dimension de votre grille
+plot_magnetic_moments_3d('magnetic_data.csv', 4)  # Assurez-vous que dim correspond à la dimension de votre grille

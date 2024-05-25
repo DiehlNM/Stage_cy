@@ -1,13 +1,21 @@
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 #include <armadillo>
 #include "save_data.hpp"
 
 
 using namespace std;
 using namespace arma;
+//namespace fs = std::filesystem;
 
-void save_magnetic_data(const vec& mx, const vec& my, const vec& mz, const string& filename) {
+
+void save_magnetic_data(const vec& mx, const vec& my, const vec& mz, int Dim, double density) {
+    
+    //fs::create_directory("Image");
+    //std::filesystem::create_directory("Image");
+    string filename = "Image/magnetic_data_dim_" + to_string(Dim) + "_density_" + to_string(density) + ".csv" ;
+    //string filename2 = "Results"
     ofstream file(filename);
     if (file.is_open()) {
         file << "mx,my,mz\n"; // En-tête du CSV
