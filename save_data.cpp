@@ -14,7 +14,7 @@ void save_magnetic_data(const vec& mx, const vec& my, const vec& mz, int Dim, do
     
     //fs::create_directory("Image");
     //std::filesystem::create_directory("Image");
-    string filename = "Image/magnetic_data_dim_" + to_string(Dim) + "_density_" + to_string(density) + ".csv" ;
+    string filename = "Image/magnetic_data10_dim_" + to_string(Dim) + "_density_" + to_string(density) + ".csv" ;
     //string filename2 = "Results"
     ofstream file(filename);
     if (file.is_open()) {

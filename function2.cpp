@@ -131,7 +131,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
 
     // Implémentation des variables  
-    std::cout << "Implémentation des variables " << std::endl ;
+    //std::cout << "Implémentation des variables " << std::endl ;
 
     //int Dim=4;           // Dimension du réseau 
     int Nb_at = Dim*Dim;    // Nombre d'atomes = Dim*Dim
@@ -331,17 +331,30 @@ double mu_max (double T, int meth, int Dim, double density){
     //double nb_elec; // Nombre d'electron 
     //double w_up, w_down; //Variable pour les fonctions de répartition 
     //double fermi_dirac;
-    cout << " vue " << endl;
+    //cout << " vue " << endl;
 
     std::ofstream file("criteria_data.csv");
     file << "Iteration,Criter_Down,Criter_Up,Criter_M,Criter_P\n";
-
     auto start = high_resolution_clock::now();
-    auto last_time = start;
+    auto last_time = start;    
+
+
 
 
     while ( (criter_down > 0.0000001) && (criter_up > 0.0000001) &&  (criter_m > 0.000001) && (criter_p > 0.000001) ){
 
+        auto now = high_resolution_clock::now();
+        auto duration = duration_cast<seconds>(now - last_time);
+        if (duration.count() >= 1) {
+            auto elapsed = duration_cast<seconds>(now - start);
+            auto hour = duration_cast<hours>(elapsed).count();
+            auto minute = duration_cast<minutes>(elapsed).count() % 60;
+            auto second = elapsed.count() % 60;
+            cout << "\rElapsed time: " << hour << "h " << minute << "m " << second << "s" << flush;
+            last_time = now;
+        }
+        
+        
         double potentiel_chimique=0;// Potentiel chimique 
         double step=0;
         double nb_elec=0; // Nombre d'electron 
@@ -352,7 +365,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
         //cout << iter << endl;
 
-        if (iter==5000){
+        if (iter==2000){
             break;
         }
 
@@ -615,16 +628,7 @@ double mu_max (double T, int meth, int Dim, double density){
         file << iter << "," << criter_down << "," << criter_up << "," << criter_m << "," << criter_p << "\n";
 
 
-        auto now = high_resolution_clock::now();
-        auto duration = duration_cast<seconds>(now - last_time);
-        if (duration.count() >= 1) {
-            auto elapsed = duration_cast<seconds>(now - start);
-            auto hour = duration_cast<hours>(elapsed).count();
-            auto minute = duration_cast<minutes>(elapsed).count() % 60;
-            auto second = elapsed.count() % 60;
-            cout << "\rElapsed time: " << hour << "h " << minute << "m " << second << "s" << flush;
-            last_time = now;
-        }
+
 
     }
 
@@ -647,10 +651,19 @@ double mu_max (double T, int meth, int Dim, double density){
 
     density_total = sum(occup)/Nb_at;
     //vec norme_moment = (mx *mx + my*my + mz*mz);
+    
+    std::ofstream filename;
+    filename.open("Data/data16.csv", ios::app);
+    if (filename.is_open()){
 
+        //cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n" ;
+        filename << Dim << "," << density_total << "," << energie_totale << "," << energy_per_site << "," << T << "," << U << "," << iter << "," << criter_up << "," << criter_down << "," << criter_p << "," << criter_m << "\n";
+        filename.close();
+    } else {
+        //cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n";
+    }
 
-
-    cout << "\n \nFin d'itération \n\n\n" ;
+    /*cout << "\n \nFin d'itération \n\n\n" ;
     //cout << "Energie de fermi " << energie_fermi << endl;
     //cout << "Energie totale " << energie_totale << endl;
     //cout << "Valeur du gap " << gap << endl << endl << endl;
@@ -677,12 +690,12 @@ double mu_max (double T, int meth, int Dim, double density){
     //cout << " Mz " << (val_m_eup - val_m_edown)/2 << endl;
     //cout << "Occupation moyenne par site " << occup << endl;
     cout << "Mean density value " << density_total << endl;
-    cout << "Nombre d'électron total " << sum(occup) << endl;
+    cout << "Nombre d'électron total " << sum(occup) << endl;*/
     //cout << "Norme moment " << norme_moment << endl;
 
  // Display of the magnetic configuration 
     save_magnetic_data(mx, my, mz, Dim, density_total);
-    plot_magnetic_moments(mx, my, mz, Dim);
+   //plot_magnetic_moments(mx, my, mz, Dim);
 
  
 
