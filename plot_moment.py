@@ -33,7 +33,7 @@ def plot_magnetic_moments_3d(filename, dim):
 
 
     # Création des subplots
-    fig, axs = plt.subplots(3, 2, figsize=(12, 18))
+    fig, axs = plt.subplots(3, 2)
 
     transorm = Affine2D().rotate_deg(45)
 
@@ -82,9 +82,9 @@ def plot_magnetic_moments_3d(filename, dim):
     plt.show()
 
 # Appel de la fonction avec le chemin vers le fichier CSV et la dimension de la grille
-#plot_magnetic_moments_3d('Image/magnetic_data10_dim_16_density_1.000000.csv', 10)  # Assurez-vous que dim correspond à la dimension de votre grille
+plot_magnetic_moments_3d('Image/magnetic_data10_dim_20_density_1.000000.csv', 20)  # Assurez-vous que dim correspond à la dimension de votre grille
 
-for i in range (7):
-    j = i + 4
-    filename = f"Image/magnetic_data_dim_{j}_density_1.000000.csv"
-    plot_magnetic_moments_3d(filename,j)
+#for i in range (7):
+#    j = i + 4
+#    filename = f"Image/magnetic_data_dim_{j}_density_1.000000.csv"
+#    plot_magnetic_moments_3d(filename,j)

@@ -365,7 +365,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
         //cout << iter << endl;
 
-        if (iter==2000){
+        if (iter==10000){
             break;
         }
 
@@ -695,7 +695,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
  // Display of the magnetic configuration 
     save_magnetic_data(mx, my, mz, Dim, density_total);
-   //plot_magnetic_moments(mx, my, mz, Dim);
+    plot_magnetic_moments(mx, my, mz, Dim);
 
  
 

@@ -37,13 +37,15 @@ int main(){
     auto last_time = start;
     //cout << "test\n" ;
 
-    while (density>=0.5){
+    /*while (density>=0.5){
         
         a = mu_max(0.000001, 1, 16, density);
         density -= 0.1;
         cout << "Density " << density << endl;
 
-    }
+    }*/
+
+    a = mu_max(0.000001, 1, 20, density);
 
     auto now = high_resolution_clock::now();
     auto duration = duration_cast<seconds>(now - last_time);
@@ -52,7 +54,7 @@ int main(){
     auto hour = duration_cast<hours>(elapsed).count();
     auto minute = duration_cast<minutes>(elapsed).count() % 60;
     auto second = elapsed.count() % 60;
-    cout << "Temps total d'execution " << hour << "h " << minute << "m " << second << "s" << endl;
+    cout << endl << "Temps total d'execution " << hour << "h " << minute << "m " << second << "s" << endl;
     last_time = now;
     
 
