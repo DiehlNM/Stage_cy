@@ -35,9 +35,6 @@ def plot_magnetic_moments_on_square_lattice(filename, dim):
     y = Position[:, 2]
     rotation_angle = 0
     u, v = rotate_vector(mx, my, rotation_angle)  # Appliquer la rotation aux vecteurs dans le plan XY
-    u = mx**2
-    v = my**2
-    w = mz**2
 
     # Plot XY Plane - Vectors
     plt.figure(figsize=(10, 10))
