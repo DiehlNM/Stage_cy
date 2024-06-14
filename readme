@@ -14,7 +14,7 @@ g++ main.cpp -o main2 -std=c++11 -O2 -I ~/Documents/Stage_3/arma/armadillo-11.0.
 
 g++ main.cpp -o main2 -std=c++11 -O2 -I ~/Documents/Stage_3/arma/armadillo-11.0.0/include -I/usr/include/python3.10 function2.cpp plot_magnetic.cpp save_data.cpp -DARMA_DONT_USE_WRAPPER -lopenblas -lpython3.10 -I /home/diehlm/.local/lib/python3.10/site-packages/numpy/core/include
 
-g++ main.cpp -o main2 -std=c++11 -O2 -I /home/christian-d-manicka/Documents/Stage/Stage_cy/arma/include -I/usr/include/python3.12 function2.cpp plot_magnetic.cpp save_data.cpp -DARMA_DONT_USE_WRAPPER -lopenblas -lpython3.12 -I /usr/lib/python3/dist-packages/numpy/core/include
+g++ main.cpp -o main2 -std=c++11 -O2 -I /home/diehlm/Documents/Stage_cy/arma/include -I/usr/include/python3.12 function2.cpp plot_magnetic.cpp save_data.cpp -DARMA_DONT_USE_WRAPPER -lopenblas -lpython3.12 -I /usr/lib/python3/dist-packages/numpy/core/include
 
 
 #commandes github 

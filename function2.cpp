@@ -134,7 +134,7 @@ double mu_max (double T, int meth, int Dim, double density){
     //std::cout << "Implémentation des variables " << std::endl ;
 
     //int Dim=4;           // Dimension du réseau 
-    int Nb_at = Dim*Dim;    // Nombre d'atomes = Dim*Dim
+    double Nb_at = Dim*Dim;    // Nombre d'atomes = Dim*Dim
     double a=1;          // Paramètre de maille 
     double t=1;          // Integrale de transfert
     double E_zero=0;     // Energie ground 
@@ -341,7 +341,8 @@ double mu_max (double T, int meth, int Dim, double density){
 
 
 
-    while ( (criter_down > 0.000001) && (criter_up > 0.000001) &&  (criter_m > 0.000001) && (criter_p > 0.000001) ){
+
+    while ( criter_down > 0.000001 && criter_up > 0.000001 /*&&  (criter_m > 0.000001) && (criter_p > 0.000001)*/ ){
 
         auto now = high_resolution_clock::now();
         auto duration = duration_cast<seconds>(now - last_time);
@@ -365,7 +366,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
         //cout << iter << endl;
 
-        if (iter==4000){
+        if (iter==5000){
             break;
         }
 
@@ -617,8 +618,8 @@ double mu_max (double T, int meth, int Dim, double density){
         si_p = ((1-p)*si_p) + (p*nsi_p);
 
         // Nullifier les Si 
-        //si_m.zeros();
-        //si_p.zeros();
+        si_m.zeros();
+        si_p.zeros();
 
         //cout << "Iter = " << iter << " criter up " << criter_up << endl; 
         //cout << " criter down" << criter_down << endl;
@@ -655,11 +656,11 @@ double mu_max (double T, int meth, int Dim, double density){
     //vec norme_moment = (mx *mx + my*my + mz*mz);
     
     std::ofstream filename;
-    filename.open("Data/data_test_6.csv", ios::app);
+    filename.open("MF_Data/List/data_4.csv", ios::app);
     if (filename.is_open()){
 
         //cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n" ;
-        filename << Dim << "," << density_total << "," << energie_totale << "," << energy_per_site << "," << mu_maxi << "," << mu_min << "," << T << "," << U << "," << iter << "," << criter_up << "," << criter_down << "," << criter_p << "," << criter_m << "\n";
+        filename << Dim << "," << density_total << "," << energie_totale << "," << energy_per_site << "," << mu_maxi << "," << mu_min << "," << mz_max << "," << T << "," << U << "," << iter << "," << criter_up << "," << criter_down << "," << criter_p << "," << criter_m << "\n";
         filename.close();
     } else {
         //cout << "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n";
@@ -696,8 +697,8 @@ double mu_max (double T, int meth, int Dim, double density){
     //cout << "Norme moment " << norme_moment << endl;
 
  // Display of the magnetic configuration 
-    save_magnetic_data(mx, my, mz, Dim, density_total);
-    //plot_magnetic_moments(mx, my, mz, Dim);
+    save_magnetic_data(mx, my, mz, Dim, density_total, T);
+    plot_magnetic_moments(mx, my, mz, Dim);
 
  
 
@@ -705,6 +706,6 @@ double mu_max (double T, int meth, int Dim, double density){
     //cout << " " <<  << endl;
     //cout << " " <<  << endl;
 
-    return abs(mu_maxi);
+    return abs(mz_max);
 
 }

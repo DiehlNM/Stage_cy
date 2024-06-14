@@ -35,7 +35,7 @@ def plot_magnetic_moments_3d(filename, dim, vmax, vmin):
             intensitiesyz[i, j] = my[idx]**2 + mz[idx]**2
             intensitiesxz[i, j] = mx[idx]**2 + mz[idx]**2
 
-            Position[k, 0] = k  # Numéro de l'atome
+            Position[k, 0] = idx  # Numéro de l'atome
             Position[k, 1] = i  # Coordonnée i
             Position[k, 2] = j  # Coordonnée j
             k += 1
@@ -132,9 +132,9 @@ def plot_magnetic_moments_3d(filename, dim, vmax, vmin):
 
 
 # Appel de la fonction avec le chemin vers le fichier CSV et la dimension de la grille
-plot_magnetic_moments_3d('Fichier_test/magnetic_data_test20_dim_20_density_0.800000.csv', 20, 0.0732015, 0.00115155)  # Assurez-vous que dim correspond à la dimension de votre grille
+plot_magnetic_moments_3d('MF_Data/Data/magnetic_data_dim_6_density_1.000000_temperature0.000001.csv', 6, 0.0732015, 0.00115155)  # Assurez-vous que dim correspond à la dimension de votre grille
 
 #for i in range (7):
 #    j = i + 4
-#    filename = f"Image/magnetic_data_dim_{j}_density_1.000000.csv"
+#    filename = f"Image/magnetic_data_dim_{j}_density_0.900000.csv"
 #    plot_magnetic_moments_3d(filename,j)

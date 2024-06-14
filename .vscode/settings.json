@@ -1,0 +1,9 @@
+{
+    "cmake.sourceDirectory": "/home/christian-d-manicka/Documents/Stage/Stage_cy/arma",
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "cmath": "cpp",
+        "complex": "cpp",
+        "fstream": "cpp"
+    }
+}

@@ -22,13 +22,13 @@ using namespace std::chrono;
 
 int main(){
 
-    double mu;
+    //double mu;
     string fichier("mu_max_T.dat");
     std::ofstream flux(fichier.c_str());
 
-    int N=200;
+    int N=100;
     int meth;
-    vector<double> x(N),y(N);
+
     //cout << "Choisir methode 1 ou 2" << endl;
     //cin >> meth ;
     //cout << endl;
@@ -45,7 +45,51 @@ int main(){
 
     }*/
 
+    /*a = mu_max(0.000001, 1, 20, 0.95);
+    a = mu_max(0.000001, 1, 20, 0.90);
+    a = mu_max(0.000001, 1, 20, 0.85);
     a = mu_max(0.000001, 1, 20, 0.82);
+    a = mu_max(0.1, 1, 20, 0.90);
+    a = mu_max(0.2, 1, 20, 0.82);
+    a = mu_max(0.1, 1, 20, 0.82);*/
+
+    string filename = "MF_Data/Plot/moment_max_mf_data_dim_" + to_string(4) + ".csv" ;
+    //string filename2 = "Results"
+    ofstream file(filename);
+    if (file.is_open()) {
+        file << "mu_max,T\n"; // En-tête du CSV
+    } else {
+        cout << "Unable to open file";
+    }
+
+
+    const int num_values = 1000;
+    
+    // Vecteur pour stocker les valeurs
+    std::vector<double> values;
+    values.reserve(num_values);
+    vector<double> mu(num_values),T(num_values);
+    
+    // Générer les valeurs équitablement espacées
+    for (int i = 0; i < num_values; ++i) {
+        values.push_back(static_cast<double>(i) / (num_values - 1));
+    }
+
+    /*for (int i=0; i<num_values; i++){
+        if (i==0){
+            mu[i] = mu_max(0.000001, 1, 4, 1);
+            T[i] = pow(10,-i);
+            file << mu[i] << "," << T[i] << endl;
+        } else {
+            mu[i] = mu_max(values[i], 1, 4, 1);
+            T[i] = values[i];
+            file << mu[i] << "," << T[i] << endl;
+        }
+        
+    }*/ file.close();
+
+    a = mu_max(0.000001, 1, 6, 1);
+
 
     auto now = high_resolution_clock::now();
     auto duration = duration_cast<seconds>(now - last_time);

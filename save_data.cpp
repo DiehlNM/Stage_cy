@@ -10,11 +10,11 @@ using namespace arma;
 //namespace fs = std::filesystem;
 
 
-void save_magnetic_data(const vec& mx, const vec& my, const vec& mz, int Dim, double density) {
+void save_magnetic_data(const vec& mx, const vec& my, const vec& mz, int Dim, double density, double T) {
     
     //fs::create_directory("Image");
     //std::filesystem::create_directory("Image");
-    string filename = "Fichier_test/magnetic_data_test20_dim_" + to_string(Dim) + "_density_" + to_string(density) + ".csv" ;
+    string filename = "MF_Data/Data/magnetic_data_dim_" + to_string(Dim) + "_density_" + to_string(density) + "_temperature" + to_string(T) + ".csv" ;
     //string filename2 = "Results"
     ofstream file(filename);
     if (file.is_open()) {
