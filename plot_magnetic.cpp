@@ -44,6 +44,7 @@ void plot_magnetic_moments(const vec& mx, const vec& my, const vec& mz, int Dim)
     ylim(-1, Dim);
     title("Magnetic Moments in XZ Plane");
     grid(true);
+    //figure_size(10,10);
     show();
 
 }

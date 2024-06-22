@@ -342,7 +342,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
 
 
-    while ( criter_down > 0.000001 && criter_up > 0.000001 /*&&  (criter_m > 0.000001) && (criter_p > 0.000001)*/ ){
+    while ( criter_down > 0.000001 && criter_up > 0.000001 &&  (criter_m > 0.000001) && (criter_p > 0.000001) ){
 
         auto now = high_resolution_clock::now();
         auto duration = duration_cast<seconds>(now - last_time);
@@ -366,7 +366,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
         //cout << iter << endl;
 
-        if (iter==5000){
+        if (iter==3500){
             break;
         }
 
@@ -618,8 +618,8 @@ double mu_max (double T, int meth, int Dim, double density){
         si_p = ((1-p)*si_p) + (p*nsi_p);
 
         // Nullifier les Si 
-        si_m.zeros();
-        si_p.zeros();
+        //si_m.zeros();
+        //si_p.zeros();
 
         //cout << "Iter = " << iter << " criter up " << criter_up << endl; 
         //cout << " criter down" << criter_down << endl;
@@ -636,8 +636,8 @@ double mu_max (double T, int meth, int Dim, double density){
     file.close();
 
     
-    double mu_maxi, mu_min, mz_max;
-    energie_totale -= dot(val_m_eup,val_m_edown);
+    double mx_max, mx_min, mu_maxi, mu_min, mz_max, mz_min;
+    energie_totale -= arma::dot(val_m_eup,val_m_edown);
     energie_totale += norm(si_p)*norm(si_p);
     energie_totale += 0.25;
     energie_totale *= U;
@@ -649,14 +649,17 @@ double mu_max (double T, int meth, int Dim, double density){
     my = imag(si_p);
     vec mz = (val_m_eup - val_m_edown)/2;
     vec occup = (val_m_eup + val_m_edown);
-    mu_maxi = max(mx % mx + my % my);
-    mu_min = min(mx % mx + my % my);
+    mx_max = max(mx);
+    mu_maxi = max(mx % mx + my % my + mz % mz);
+    mu_min = min(mx % mx + my % my + mz % mz);
+    //mu_maxi = std::max(mx_max,mz_max) ;
+    //mu_min = std::min((min(mx)),(min(mz)));
 
     density_total = sum(occup)/Nb_at;
     //vec norme_moment = (mx *mx + my*my + mz*mz);
     
     std::ofstream filename;
-    filename.open("MF_Data/List/data_4.csv", ios::app);
+    filename.open("MF_Data/List/data_iter_2.csv", ios::app);
     if (filename.is_open()){
 
         //cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n" ;
@@ -698,7 +701,7 @@ double mu_max (double T, int meth, int Dim, double density){
 
  // Display of the magnetic configuration 
     save_magnetic_data(mx, my, mz, Dim, density_total, T);
-    plot_magnetic_moments(mx, my, mz, Dim);
+    //plot_magnetic_moments(mx, my, mz, Dim);
 
  
 

@@ -45,13 +45,13 @@ int main(){
 
     }*/
 
-    /*a = mu_max(0.000001, 1, 20, 0.95);
-    a = mu_max(0.000001, 1, 20, 0.90);
-    a = mu_max(0.000001, 1, 20, 0.85);
-    a = mu_max(0.000001, 1, 20, 0.82);
-    a = mu_max(0.1, 1, 20, 0.90);
-    a = mu_max(0.2, 1, 20, 0.82);
-    a = mu_max(0.1, 1, 20, 0.82);*/
+    /*a = mu_max(0.000001, 1, 4, 1);
+    a = mu_max(0.000001, 1, 5, 1);
+    a = mu_max(0.000001, 1, 6, 1);
+    a = mu_max(0.000001, 1, 7, 1);
+    a = mu_max(0.000001, 1, 8, 1);
+    a = mu_max(0.000001, 1, 9, 1);
+    a = mu_max(0.000001, 1, 10, 1)*/;
 
     string filename = "MF_Data/Plot/moment_max_mf_data_dim_" + to_string(4) + ".csv" ;
     //string filename2 = "Results"
@@ -88,7 +88,13 @@ int main(){
         
     }*/ file.close();
 
-    a = mu_max(0.000001, 1, 6, 1);
+    //a = mu_max(0.000001, 1, 21, 1);
+
+    for(int k =0; k<5; k++){
+        for (int j=4; j<13; j++ ){
+            a = mu_max(0.000001, 1, j, 1);
+        }
+    }
 
 
     auto now = high_resolution_clock::now();
